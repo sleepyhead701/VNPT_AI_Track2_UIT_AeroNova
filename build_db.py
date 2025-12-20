@@ -20,6 +20,38 @@ DB_ROOT_DIR = "Vector DB"
 
 # ================= HÀM XỬ LÝ TEXT (CHUẨN CŨ) =================
 
+def sanitize_filenames(root_dir):
+    """
+    Quét toàn bộ thư mục và đổi tên file chứa ký tự đặc biệt.
+    Ví dụ: 'Am_nhac_&_Dien_anh.txt' -> 'Am_nhac_va_Dien_anh.txt'
+    """
+    print(f"-> Scanning for special characters in filenames in '{root_dir}'...")
+    count = 0
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        for filename in filenames:
+            if "&" in filename:
+                old_path = os.path.join(dirpath, filename)
+                
+                # Thay thế & bằng _va_ cho dễ đọc và an toàn
+                new_filename = filename.replace("&", "_va_")
+                
+                # Hoặc muốn đơn giản hơn thì thay bằng gạch dưới:
+                # new_filename = filename.replace("&", "_")
+                
+                new_path = os.path.join(dirpath, new_filename)
+                
+                try:
+                    os.rename(old_path, new_path)
+                    count += 1
+                    # print(f"   [Renamed] {filename} -> {new_filename}")
+                except Exception as e:
+                    print(f"   ⚠️ Could not rename {filename}: {e}")
+                    
+    if count > 0:
+        print(f"   ✅ Renamed {count} files containing '&'.")
+    else:
+        print("   ✅ No files needed renaming.")
+
 def slugify(text: str):
     """
     Chuyển tên file thành tên Collection hợp lệ.

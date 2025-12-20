@@ -27,8 +27,29 @@ API_CONFIG = {
 
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-INPUT_PATH = os.path.join(BASE_DIR, "data", "private_test.json") 
-OUTPUT_PATH = os.path.join(BASE_DIR, "output", "submission.csv")
-OUTPUT_TIME_PATH = os.path.join(BASE_DIR, "output", "submission_time.csv")
+import os
 
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+if os.path.exists("/app/data/private_test.json"):
+    INPUT_PATH = "/app/data/private_test.json"
+    OUTPUT_DIR = "/app/output"
+elif os.path.exists("/data/private_test.json"):
+    INPUT_PATH = "/data/private_test.json"
+    OUTPUT_DIR = "/output"
+else:
+    # Nếu không thấy các đường dẫn trên -> Đang chạy Local (Windows)
+    INPUT_PATH = os.path.join(BASE_DIR, "data", "private_test.json")
+    OUTPUT_DIR = os.path.join(BASE_DIR, "output")
+
+# -- OUTPUT PATH --
+# Tự động tạo thư mục output nếu chưa có (tránh lỗi)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+OUTPUT_PATH = os.path.join(OUTPUT_DIR, "submission.csv")
+OUTPUT_TIME_PATH = os.path.join(OUTPUT_DIR, "submission_time.csv")
+
+# -- VECTOR DB PATH --
+# Folder chứa DB cũng nên để động theo BASE_DIR
+DB_ROOT_DIR = os.path.join(BASE_DIR, "Vector DB")
