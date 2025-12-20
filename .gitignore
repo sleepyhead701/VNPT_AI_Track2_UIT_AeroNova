@@ -1,0 +1,12 @@
+output/
+*.csv
+
+# Bỏ qua file hệ thống và cache python
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.venv
+venv/
+.idea/
+.vscode/
